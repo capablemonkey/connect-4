@@ -7,8 +7,25 @@
     (fn [row] (vec (repeat columns nil)))
     (vec (repeat rows nil))))
 
+(defn column-height [board column]
+  "Returns the number of discs in a column in the given board"
+  (count
+    (filter
+      (fn [row] (not= nil (get row column)))
+      board)))
+
+(defn set-cell [board row column value]
+  "Returns a new board with the cell at the given row and column set to value"
+  (assoc board row
+    (assoc (get board row) column value)))
+
 (defn drop-disc [board column color]
-  "Returns a new board with a disc of the given color added to the top of the given column")
+  "Returns a new board with a disc of the given color added to the top of the given column"
+  (set-cell
+    board
+    (column-height board column)
+    column
+    color))
 
 (defn won? [board]
   "Returns true if the board is in a win state")
