@@ -67,3 +67,23 @@
           1
           :b))
       "drop-disc drops a disc in the correct cell")))
+
+(deftest column-full-test
+  (testing "column-full-test"
+    (is
+      (column-full?
+        [
+          [nil :a nil]
+          [nil :a nil]
+          [nil :b nil]]
+        1)
+      "column-full? should return true for a column that is full")
+    (is
+      (not
+        (column-full?
+          [
+            [nil :a nil]
+            [nil :a nil]
+            [nil nil nil]]
+          1))
+      "column-full? should return true for a column that is full")))

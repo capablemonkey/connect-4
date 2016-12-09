@@ -3,9 +3,10 @@
 
 (defn new-board [rows columns]
   "Returns a vector containing *rows* number of vectors, each of length *columns* with cells initialized to nil."
-  (map
-    (fn [row] (vec (repeat columns nil)))
-    (vec (repeat rows nil))))
+  (vec
+    (map
+      (fn [row] (vec (repeat columns nil)))
+      (vec (repeat rows nil)))))
 
 (defn column-height [board column]
   "Returns the number of discs in a column in the given board"
@@ -27,6 +28,15 @@
     column
     color))
 
+(defn column-full? [board column]
+  (=
+    (count (first board))
+    (column-height board column)))
+
+(defn print-board [board]
+  (doseq [row (reverse board)]
+    (println row)))
+
 (defn won? [board]
   "Returns true if the board is in a win state")
 
@@ -37,4 +47,8 @@
   "I don't do a whole lot ... yet."
   [& args]
   (println "Hello, World!")
-  (println (new-board 6 7)))
+  (print-board
+    (drop-disc
+      (new-board 6 7)
+      3
+      :a)))
