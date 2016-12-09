@@ -20,6 +20,12 @@
   (assoc board row
     (assoc (get board row) column value)))
 
+(defn get-cell [board row column]
+  "Returns the value at the given cell in the given board"
+  (get
+    (get board row)
+    column))
+
 (defn drop-disc [board column color]
   "Returns a new board with a disc of the given color added to the top of the given column"
   (set-cell
@@ -36,9 +42,33 @@
 (defn print-board [board]
   (doseq [row (reverse board)]
     (println row)))
-
-(defn won? [board]
-  "Returns true if the board is in a win state")
+;
+(defn find-n-chain
+  (
+    [board n row column]
+    (or
+      (find-n-chain board n row (inc column) :right [(get-cell board row column)])
+      (find-n-chain board n (inc row) column :down [(get-cell board row column)])
+      (find-n-chain board n (inc row) (inc column) :down-right [(get-cell board row column)])
+      (find-n-chain board n (inc row) (dec column) :down-left [(get-cell board row column)])))
+  (
+    [board n row column direction chain]
+    (let [current-color (get-cell board row column)]
+      (cond
+        (not= (first chain) current-color)
+        false
+        (= n (inc (count chain)))
+        true
+        :else
+        (cond
+          (= direction :right)
+          (find-n-chain board n row (inc column) direction (cons current-color chain))
+          (= direction :down)
+          (find-n-chain board n (inc row) column direction (cons current-color chain))
+          (= direction :down-right)
+          (find-n-chain board n (inc row) (inc column) direction (cons current-color chain))
+          (= direction :down-left)
+          (find-n-chain board n (inc row) (dec column) direction (cons current-color chain)))))))
 
 (defn tie? [board]
   "Returns true if there are no more moves left in the board")

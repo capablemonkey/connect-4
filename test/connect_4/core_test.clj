@@ -69,7 +69,7 @@
       "drop-disc drops a disc in the correct cell")))
 
 (deftest column-full-test
-  (testing "column-full-test"
+  (testing "column-full?"
     (is
       (column-full?
         [
@@ -87,3 +87,109 @@
             [nil nil nil]]
           1))
       "column-full? should return true for a column that is full")))
+
+(deftest get-cell-test
+  (testing "get-column"
+    (is
+      (=
+        :a
+        (get-cell
+          [
+            [nil nil nil]
+            [nil nil nil]
+            [nil :a nil]]
+          2
+          1))
+      "get-cell returns the correct value at the given row and column")
+    (is
+      (=
+        nil
+        (get-cell
+          [
+            [:a :a :a]
+            [:a :a :a]
+            [:a :a :a]]
+          5
+          5))
+      "get-cell returns nil when the given row and column is out of bounds")))
+
+(deftest find-n-chain-test
+  (testing "find-n-chain"
+    (is
+      (=
+        false
+        (find-n-chain
+          [
+            [:a :a :b :a]
+            [nil nil nil nil]
+            [nil nil nil nil]
+            [nil nil nil nil]]
+          3
+          0
+          0))
+      "find-n-chain returns false when a chain does not exist at 0,0")
+    (is
+      (=
+        true
+        (find-n-chain
+          [
+            [:a :a :a :b]
+            [nil nil nil nil]
+            [nil nil nil nil]
+            [nil nil nil nil]]
+          3
+          0
+          0))
+      "find-n-chain returns true when a horizontal chain exists at 0,0")
+    (is
+      (=
+        true
+        (find-n-chain
+          [
+            [:a :a :a :b]
+            [:a nil nil nil]
+            [:a nil nil nil]
+            [:a nil nil nil]]
+          3
+          0
+          0))
+      "find-n-chain returns true when a vertical chain exists at 0,0")
+    (is
+      (=
+        true
+        (find-n-chain
+          [
+            [:a :a :a :b]
+            [:b :a nil nil]
+            [:a nil :a nil]
+            [:a nil nil :b]]
+          3
+          0
+          0))
+      "find-n-chain returns true when a down-right chain exists at 0,0")
+    (is
+      (=
+        true
+        (find-n-chain
+          [
+            [:a :a :a :b]
+            [:b :b :b nil]
+            [:a :b :a nil]
+            [:a nil nil :b]]
+          3
+          0
+          3))
+      "find-n-chain returns true when a down-left chain exists at 0,3")
+    (is
+      (=
+        false
+        (find-n-chain
+          [
+            [:a :a :a :b]
+            [:b :a :b :a]
+            [:a :b :a :b]
+            [:a :b :a :b]]
+          3
+          1
+          0))
+      "find-n-chain returns true when no chain exists in a full board at 1,0")))
