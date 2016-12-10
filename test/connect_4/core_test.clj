@@ -193,3 +193,14 @@
           1
           0))
       "find-n-chain returns true when no chain exists in a full board at 1,0")))
+
+(deftest won-test
+  (testing "won?"
+    (is
+      (=
+        true
+        (won?
+          [
+            [:a nil nil]
+            [nil :a nil]
+            [nil nil :a]])))))

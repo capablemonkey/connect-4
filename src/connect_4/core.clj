@@ -46,11 +46,13 @@
 (defn find-n-chain
   (
     [board n row column]
-    (or
-      (find-n-chain board n row (inc column) :right [(get-cell board row column)])
-      (find-n-chain board n (inc row) column :down [(get-cell board row column)])
-      (find-n-chain board n (inc row) (inc column) :down-right [(get-cell board row column)])
-      (find-n-chain board n (inc row) (dec column) :down-left [(get-cell board row column)])))
+    (and
+      (not= nil (get-cell board row column))
+      (or
+        (find-n-chain board n row (inc column) :right [(get-cell board row column)])
+        (find-n-chain board n (inc row) column :down [(get-cell board row column)])
+        (find-n-chain board n (inc row) (inc column) :down-right [(get-cell board row column)])
+        (find-n-chain board n (inc row) (dec column) :down-left [(get-cell board row column)]))))
   (
     [board n row column direction chain]
     (let [current-color (get-cell board row column)]
@@ -69,6 +71,22 @@
           (find-n-chain board n (inc row) (inc column) direction (cons current-color chain))
           (= direction :down-left)
           (find-n-chain board n (inc row) (dec column) direction (cons current-color chain)))))))
+
+(defn map-board [func board]
+  (map-indexed
+    (fn [row-index row]
+      (map-indexed
+        (fn [column-index cell] (apply func [row-index column-index]))
+        row))
+    board))
+
+(defn won? [board]
+  "Returns true if the board is in a win state"
+  (some
+    (fn [row] (some true? row))
+    (map-board
+      (fn [row column] (find-n-chain board 3 row column))
+      board)))
 
 (defn tie? [board]
   "Returns true if there are no more moves left in the board")
