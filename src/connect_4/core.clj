@@ -1,49 +1,59 @@
 (ns connect-4.core
   (:gen-class))
 
-(defn new-board [rows columns]
+(defn new-board
   "Returns a vector containing *rows* number of vectors, each of length *columns* with cells initialized to nil."
+  [rows columns]
   (vec
     (map
       (fn [row] (vec (repeat columns nil)))
       (vec (repeat rows nil)))))
 
-(defn column-height [board column]
+(defn column-height
   "Returns the number of discs in a column in the given board"
+  [board column]
   (count
     (filter
       (fn [row] (not= nil (get row column)))
       board)))
 
-(defn set-cell [board row column value]
+(defn set-cell
   "Returns a new board with the cell at the given row and column set to value"
+  [board row column value]
   (assoc board row
     (assoc (get board row) column value)))
 
-(defn get-cell [board row column]
+(defn get-cell
   "Returns the value at the given cell in the given board"
+  [board row column]
   (get
     (get board row)
     column))
 
-(defn drop-disc [board column color]
+(defn drop-disc
   "Returns a new board with a disc of the given color added to the top of the given column"
+  [board column color]
   (set-cell
     board
     (column-height board column)
     column
     color))
 
-(defn column-full? [board column]
+(defn column-full?
+  "Returns true if the given column in the given board is full"
+  [board column]
   (=
     (count (first board))
     (column-height board column)))
 
-(defn print-board [board]
+(defn print-board
+  "Prints the board line by line, with rows in descending order"
+  [board]
   (doseq [row (reverse board)]
     (println row)))
 ;
 (defn find-n-chain
+  "Returns true if there is a chain of length n starting from the given cell at (row,column)"
   (
     [board n row column]
     (and
@@ -72,7 +82,9 @@
           (= direction :down-left)
           (find-n-chain board n (inc row) (dec column) direction (cons current-color chain)))))))
 
-(defn map-board [func board]
+(defn map-board
+  "Applies func to every cell in the given board"
+  [func board]
   (map-indexed
     (fn [row-index row]
       (map-indexed
@@ -80,16 +92,18 @@
         row))
     board))
 
-(defn won? [board]
+(defn won?
   "Returns true if the board is in a win state"
+  [board]
   (some
     (fn [row] (some true? row))
     (map-board
       (fn [row column] (find-n-chain board 3 row column))
       board)))
 
-(defn tie? [board]
-  "Returns true if there are no more moves left in the board")
+(defn tie?
+  "Returns true if there are no more moves left in the board"
+  [board])
 
 (defn -main
   "I don't do a whole lot ... yet."
