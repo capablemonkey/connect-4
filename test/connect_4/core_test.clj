@@ -203,4 +203,27 @@
           [
             [:a nil nil]
             [nil :a nil]
-            [nil nil :a]])))))
+            [nil nil :a]]
+          3))
+      "won? returns true for a board that has a chain of length 3")))
+
+(deftest filled-test
+  (testing "filled?"
+    (is
+      (=
+        false
+        (filled?
+          [
+            [:a :a :a]
+            [:a :a :a]
+            [:a :a nil]]))
+      "filled? returns false if there are still empty cells")
+    (is
+      (=
+        true
+        (filled?
+          [
+            [:a :a :a]
+            [:a :a :a]
+            [:a :a :a]]))
+      "filled? returns true if there are no empty cells")))

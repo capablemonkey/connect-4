@@ -88,22 +88,28 @@
   (map-indexed
     (fn [row-index row]
       (map-indexed
-        (fn [column-index cell] (apply func [row-index column-index]))
+        (fn [column-index cell] (apply func [board row-index column-index]))
         row))
     board))
 
 (defn won?
-  "Returns true if the board is in a win state"
-  [board]
+  "Returns true if the board contains a chain of discs of length chain-length"
+  [board chain-length]
   (some
     (fn [row] (some true? row))
     (map-board
-      (fn [row column] (find-n-chain board 3 row column))
+      (fn [board row column] (find-n-chain board chain-length row column))
       board)))
 
-(defn tie?
+(defn filled?
   "Returns true if there are no more moves left in the board"
-  [board])
+  [board]
+  (every?
+    (fn [row]
+      (=
+        (count (remove nil? row))
+        (count row)))
+    board))
 
 (defn -main
   "I don't do a whole lot ... yet."
