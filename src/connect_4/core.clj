@@ -111,12 +111,25 @@
         (count row)))
     board))
 
+(defn play-game
+  [rows columns chain-length]
+  (loop [board (new-board rows columns) player :a]
+    (print-board board)
+    (cond
+      (won? board chain-length)
+      (println "won!")
+      (filled? board)
+      (println "tie!")
+      :else
+      (do
+        (println "Drop disc at column: ")
+        (recur
+          (drop-disc board (read-string (read-line))
+            (if (= player :a) :b :a))
+          (if (= player :a) :b :a))))))
+
 (defn -main
   "I don't do a whole lot ... yet."
   [& args]
   (println "Hello, World!")
-  (print-board
-    (drop-disc
-      (new-board 6 7)
-      3
-      :a)))
+  (play-game 6 7 4))
